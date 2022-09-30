@@ -1,5 +1,6 @@
 from django.urls import path
 from AppCoder.views import *
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', inicio),    
@@ -16,4 +17,6 @@ urlpatterns = [
     path('update_estudiantes/<estudiante_id>', update_estudiantes),
     path('delete_estudiantes/<estudiante_id>', delete_estudiantes),
     path('login/', login_request),
+    path('registro/', registro),
+    path('logout/', LogoutView.as_view(template_name = "inicio.html"), name="Logout"),
 ]

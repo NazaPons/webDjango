@@ -1,15 +1,18 @@
 import email
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from AppCoder.models import Estudiante
-from AppCoder.forms import form_estudiantes
+from AppCoder.forms import form_estudiantes, UserRegisterForm
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 
+from django.contrib.auth.decorators import login_required
+
 def inicio(request):
     return render(request, "inicio.html")
 
+@login_required
 def home(request):
     return render(request, "home.html")
 
@@ -102,5 +105,19 @@ def login_request(request):
                 return render(request, "login.html", {f'form':form})
         else:
              return render(request, "login.html", {f'form':form})
+    form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
     
-    
+
+def registro(request):
+    if request.method == 'POST':
+        #form = UserCreationForm(request.POST)
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            #username = form.cleaned_data["username"]
+            form.save()
+            return redirect("/AppCoder/login/")
+    #form = UserCreationForm()
+    else:
+        form = UserRegisterForm()
+        return render(request, "registro.html", {'form': form})
